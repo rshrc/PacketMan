@@ -13,4 +13,4 @@ a nice GUI
 
 ## Screenshot
 
-![PacketMan](https://github.com/rshrc/PacketMan/blob/master/assets/app_screenshot.png)
+![PacketMan](https://imgur.com/a/OXGR6n6)
