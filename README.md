@@ -13,4 +13,4 @@ a nice GUI
 
 ## Screenshot
 
-![PacketMan](https://imgur.com/a/OXGR6n6)
+[Imgur](https://i.imgur.com/JZ2MUiX.png)
