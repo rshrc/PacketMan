@@ -13,4 +13,4 @@ a nice GUI
 
 ## Screenshot
 
-[Imgur](https://i.imgur.com/JZ2MUiX.png)
+![Imgur](https://i.imgur.com/JZ2MUiX.png)
