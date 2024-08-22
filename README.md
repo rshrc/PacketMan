@@ -13,4 +13,4 @@ a nice GUI
 
 ## Screenshot
 
-![PacketMan](../assets/app_screenshot.png)
+![PacketMan](https://github.com/rshrc/PacketMan/blob/master/assets/app_screenshot.png)
