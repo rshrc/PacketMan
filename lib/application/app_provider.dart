@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:packet_man/db/database.dart';
+import 'package:packet_man/db/tables.dart';
+import 'package:packet_man/utils/colors.dart';
 
 @injectable
 class AppProvider extends ChangeNotifier {
@@ -14,8 +19,84 @@ class AppProvider extends ChangeNotifier {
 
   final Map<int, List<Request>> requests = {};
 
+  Request? selectedRequest;
+
   initApp() async {
     await loadProjects();
+  }
+
+  void selectRequest(Request request) {
+    selectedRequest = request;
+    notifyListeners();
+  }
+
+  String dropdownValue = 'GET';
+  final TextEditingController urlController = TextEditingController();
+  final TextEditingController bodyController = TextEditingController();
+  String? status;
+
+  void setStatus(String? status) {
+    this.status = status;
+    notifyListeners();
+  }
+
+  String responseText = '';
+
+  void makeRequest() async {
+    String url = urlController.text;
+    if (url.isEmpty) {
+      responseText = 'Please enter a URL';
+      notifyListeners();
+      return;
+    }
+    http.Response response;
+
+    try {
+      switch (dropdownValue) {
+        case 'GET':
+          response = await http.get(Uri.parse(url));
+          setStatus(statusMessageColor(response.statusCode));
+          break;
+        case 'POST':
+          response = await http.post(
+            Uri.parse(url),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: bodyController.text,
+          );
+          setStatus(statusMessageColor(response.statusCode));
+          break;
+        case 'PUT':
+          response = await http.put(
+            Uri.parse(url),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(bodyController.text),
+          );
+          setStatus(statusMessageColor(response.statusCode));
+          break;
+        // Add other cases as needed
+        default:
+          response = await http.get(Uri.parse(url));
+          setStatus(statusMessageColor(response.statusCode));
+          break;
+      }
+
+      try {
+        responseText = jsonEncode(jsonDecode(response.body),
+            toEncodable: (e) => e.toString());
+      } catch (e) {
+        responseText = response.body;
+      } finally {
+        notifyListeners();
+      }
+    } catch (e) {
+      responseText = 'Error: $e';
+    } finally {
+      notifyListeners();
+    }
   }
 
   Future<void> loadProjects() async {
@@ -66,5 +147,27 @@ class AppProvider extends ChangeNotifier {
   Future<void> createRequest(int collectionId, String name) async {
     await _database.createRequest(collectionId, name);
     await loadProjects();
+  }
+
+  Future<void> updateRequest({
+    required Request request,
+  }) async {
+    final update = await _database.updateRequest(
+        selectedRequest!.id, selectedRequest!.name,
+        baseUrl: request.baseUrl,
+        endpoint: request.endpoint,
+        requestType: request.requestType,
+        environment: request.environment,
+        headers: request.headers,
+        body: request.body);
+
+    // update the request object in requests
+    final latestRequest = await _database.getRequest(selectedRequest!.id);
+    requests[selectedRequest!.collectionId] =
+        requests[selectedRequest!.collectionId]!
+            .map((r) => r.id == selectedRequest!.id ? latestRequest : r)
+            .toList();
+
+    notifyListeners();
   }
 }

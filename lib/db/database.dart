@@ -63,10 +63,38 @@ class AppDatabase extends _$AppDatabase {
     ));
   }
 
+  // update request
+  Future<int> updateRequest(
+    int requestId,
+    String name, {
+    String? baseUrl,
+    String? endpoint,
+    String? requestType,
+    String? environment,
+    String? headers,
+    String? body,
+  }) {
+    return (update(requests)..where((tbl) => tbl.id.equals(requestId)))
+        .write(RequestsCompanion(
+      name: Value(name),
+      baseUrl: Value(baseUrl),
+      endpoint: Value(endpoint),
+      requestType: Value(requestType ?? "GET"),
+      environment: Value(environment),
+      headers: Value(headers),
+      body: Value(body),
+    ));
+  }
+
   Future<List<Request>> getRequestsForCollection(int collectionId) {
     return (select(requests)
           ..where((tbl) => tbl.collectionId.equals(collectionId)))
         .get();
+  }
+
+  Future<Request> getRequest(int requestId) {
+    return (select(requests)..where((tbl) => tbl.id.equals(requestId)))
+        .getSingle();
   }
 }
 

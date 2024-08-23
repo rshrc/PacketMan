@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:packet_man/application/app_provider.dart';
-import 'package:packet_man/presentation/forms/create_requests.dart';
 import 'package:packet_man/utils/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -19,13 +18,16 @@ class RequestsList extends StatelessWidget {
           final request = requests[index];
 
           return InkWell(
+            onTap: () {
+              context.read<AppProvider>().selectRequest(request);
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(request.requestType ?? "--",
                     style: TextStyle(
                       fontSize: 14,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.bold,
                       color:
                           getColorForRequestType(request.requestType ?? "--"),
                     )),
