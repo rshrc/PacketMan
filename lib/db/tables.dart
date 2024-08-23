@@ -24,5 +24,6 @@ class Requests extends Table {
   TextColumn get requestType => text().nullable()(); // GET, POST, etc.
   TextColumn get environment => text().nullable()();
   TextColumn get headers => text().nullable()(); // Store as JSON string
-  TextColumn get body => text().nullable()(); // Store as JSON string
+  TextColumn get body => text().nullable()(); // Sto
+  TextColumn get response => text().nullable()(); // re as JSON string
 }

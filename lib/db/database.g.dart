@@ -561,6 +561,12 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
   late final GeneratedColumn<String> body = GeneratedColumn<String>(
       'body', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _responseMeta =
+      const VerificationMeta('response');
+  @override
+  late final GeneratedColumn<String> response = GeneratedColumn<String>(
+      'response', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -571,7 +577,8 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
         requestType,
         environment,
         headers,
-        body
+        body,
+        response
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -628,6 +635,10 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
       context.handle(
           _bodyMeta, body.isAcceptableOrUnknown(data['body']!, _bodyMeta));
     }
+    if (data.containsKey('response')) {
+      context.handle(_responseMeta,
+          response.isAcceptableOrUnknown(data['response']!, _responseMeta));
+    }
     return context;
   }
 
@@ -655,6 +666,8 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
           .read(DriftSqlType.string, data['${effectivePrefix}headers']),
       body: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}body']),
+      response: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}response']),
     );
   }
 
@@ -674,6 +687,7 @@ class Request extends DataClass implements Insertable<Request> {
   final String? environment;
   final String? headers;
   final String? body;
+  final String? response;
   const Request(
       {required this.id,
       required this.collectionId,
@@ -683,7 +697,8 @@ class Request extends DataClass implements Insertable<Request> {
       this.requestType,
       this.environment,
       this.headers,
-      this.body});
+      this.body,
+      this.response});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -707,6 +722,9 @@ class Request extends DataClass implements Insertable<Request> {
     }
     if (!nullToAbsent || body != null) {
       map['body'] = Variable<String>(body);
+    }
+    if (!nullToAbsent || response != null) {
+      map['response'] = Variable<String>(response);
     }
     return map;
   }
@@ -732,6 +750,9 @@ class Request extends DataClass implements Insertable<Request> {
           ? const Value.absent()
           : Value(headers),
       body: body == null && nullToAbsent ? const Value.absent() : Value(body),
+      response: response == null && nullToAbsent
+          ? const Value.absent()
+          : Value(response),
     );
   }
 
@@ -748,6 +769,7 @@ class Request extends DataClass implements Insertable<Request> {
       environment: serializer.fromJson<String?>(json['environment']),
       headers: serializer.fromJson<String?>(json['headers']),
       body: serializer.fromJson<String?>(json['body']),
+      response: serializer.fromJson<String?>(json['response']),
     );
   }
   @override
@@ -763,6 +785,7 @@ class Request extends DataClass implements Insertable<Request> {
       'environment': serializer.toJson<String?>(environment),
       'headers': serializer.toJson<String?>(headers),
       'body': serializer.toJson<String?>(body),
+      'response': serializer.toJson<String?>(response),
     };
   }
 
@@ -775,7 +798,8 @@ class Request extends DataClass implements Insertable<Request> {
           Value<String?> requestType = const Value.absent(),
           Value<String?> environment = const Value.absent(),
           Value<String?> headers = const Value.absent(),
-          Value<String?> body = const Value.absent()}) =>
+          Value<String?> body = const Value.absent(),
+          Value<String?> response = const Value.absent()}) =>
       Request(
         id: id ?? this.id,
         collectionId: collectionId ?? this.collectionId,
@@ -786,6 +810,7 @@ class Request extends DataClass implements Insertable<Request> {
         environment: environment.present ? environment.value : this.environment,
         headers: headers.present ? headers.value : this.headers,
         body: body.present ? body.value : this.body,
+        response: response.present ? response.value : this.response,
       );
   Request copyWithCompanion(RequestsCompanion data) {
     return Request(
@@ -802,6 +827,7 @@ class Request extends DataClass implements Insertable<Request> {
           data.environment.present ? data.environment.value : this.environment,
       headers: data.headers.present ? data.headers.value : this.headers,
       body: data.body.present ? data.body.value : this.body,
+      response: data.response.present ? data.response.value : this.response,
     );
   }
 
@@ -816,14 +842,15 @@ class Request extends DataClass implements Insertable<Request> {
           ..write('requestType: $requestType, ')
           ..write('environment: $environment, ')
           ..write('headers: $headers, ')
-          ..write('body: $body')
+          ..write('body: $body, ')
+          ..write('response: $response')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(id, collectionId, name, baseUrl, endpoint,
-      requestType, environment, headers, body);
+      requestType, environment, headers, body, response);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -836,7 +863,8 @@ class Request extends DataClass implements Insertable<Request> {
           other.requestType == this.requestType &&
           other.environment == this.environment &&
           other.headers == this.headers &&
-          other.body == this.body);
+          other.body == this.body &&
+          other.response == this.response);
 }
 
 class RequestsCompanion extends UpdateCompanion<Request> {
@@ -849,6 +877,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
   final Value<String?> environment;
   final Value<String?> headers;
   final Value<String?> body;
+  final Value<String?> response;
   const RequestsCompanion({
     this.id = const Value.absent(),
     this.collectionId = const Value.absent(),
@@ -859,6 +888,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     this.environment = const Value.absent(),
     this.headers = const Value.absent(),
     this.body = const Value.absent(),
+    this.response = const Value.absent(),
   });
   RequestsCompanion.insert({
     this.id = const Value.absent(),
@@ -870,6 +900,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     this.environment = const Value.absent(),
     this.headers = const Value.absent(),
     this.body = const Value.absent(),
+    this.response = const Value.absent(),
   })  : collectionId = Value(collectionId),
         name = Value(name);
   static Insertable<Request> custom({
@@ -882,6 +913,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     Expression<String>? environment,
     Expression<String>? headers,
     Expression<String>? body,
+    Expression<String>? response,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -893,6 +925,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
       if (environment != null) 'environment': environment,
       if (headers != null) 'headers': headers,
       if (body != null) 'body': body,
+      if (response != null) 'response': response,
     });
   }
 
@@ -905,7 +938,8 @@ class RequestsCompanion extends UpdateCompanion<Request> {
       Value<String?>? requestType,
       Value<String?>? environment,
       Value<String?>? headers,
-      Value<String?>? body}) {
+      Value<String?>? body,
+      Value<String?>? response}) {
     return RequestsCompanion(
       id: id ?? this.id,
       collectionId: collectionId ?? this.collectionId,
@@ -916,6 +950,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
       environment: environment ?? this.environment,
       headers: headers ?? this.headers,
       body: body ?? this.body,
+      response: response ?? this.response,
     );
   }
 
@@ -949,6 +984,9 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     if (body.present) {
       map['body'] = Variable<String>(body.value);
     }
+    if (response.present) {
+      map['response'] = Variable<String>(response.value);
+    }
     return map;
   }
 
@@ -963,7 +1001,8 @@ class RequestsCompanion extends UpdateCompanion<Request> {
           ..write('requestType: $requestType, ')
           ..write('environment: $environment, ')
           ..write('headers: $headers, ')
-          ..write('body: $body')
+          ..write('body: $body, ')
+          ..write('response: $response')
           ..write(')'))
         .toString();
   }
@@ -1408,6 +1447,7 @@ typedef $$RequestsTableCreateCompanionBuilder = RequestsCompanion Function({
   Value<String?> environment,
   Value<String?> headers,
   Value<String?> body,
+  Value<String?> response,
 });
 typedef $$RequestsTableUpdateCompanionBuilder = RequestsCompanion Function({
   Value<int> id,
@@ -1419,6 +1459,7 @@ typedef $$RequestsTableUpdateCompanionBuilder = RequestsCompanion Function({
   Value<String?> environment,
   Value<String?> headers,
   Value<String?> body,
+  Value<String?> response,
 });
 
 final class $$RequestsTableReferences
@@ -1483,6 +1524,11 @@ class $$RequestsTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get response => $state.composableBuilder(
+      column: $state.table.response,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   $$CollectionsTableFilterComposer get collectionId {
     final $$CollectionsTableFilterComposer composer = $state.composerBuilder(
         composer: this,
@@ -1539,6 +1585,11 @@ class $$RequestsTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
+  ColumnOrderings<String> get response => $state.composableBuilder(
+      column: $state.table.response,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
   $$CollectionsTableOrderingComposer get collectionId {
     final $$CollectionsTableOrderingComposer composer = $state.composerBuilder(
         composer: this,
@@ -1581,6 +1632,7 @@ class $$RequestsTableTableManager extends RootTableManager<
             Value<String?> environment = const Value.absent(),
             Value<String?> headers = const Value.absent(),
             Value<String?> body = const Value.absent(),
+            Value<String?> response = const Value.absent(),
           }) =>
               RequestsCompanion(
             id: id,
@@ -1592,6 +1644,7 @@ class $$RequestsTableTableManager extends RootTableManager<
             environment: environment,
             headers: headers,
             body: body,
+            response: response,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -1603,6 +1656,7 @@ class $$RequestsTableTableManager extends RootTableManager<
             Value<String?> environment = const Value.absent(),
             Value<String?> headers = const Value.absent(),
             Value<String?> body = const Value.absent(),
+            Value<String?> response = const Value.absent(),
           }) =>
               RequestsCompanion.insert(
             id: id,
@@ -1614,6 +1668,7 @@ class $$RequestsTableTableManager extends RootTableManager<
             environment: environment,
             headers: headers,
             body: body,
+            response: response,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) =>

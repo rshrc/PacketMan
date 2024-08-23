@@ -46,6 +46,13 @@ class RequestTestBody extends StatelessWidget {
                       border: OutlineInputBorder(),
                       labelText: 'Enter URL',
                     ),
+                    onEditingComplete: () {
+                      appState.updateRequest(
+                        request: appState.selectedRequest!.copyWith(
+                          baseUrl: Value(appState.urlController.text),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -75,13 +82,26 @@ class RequestTestBody extends StatelessWidget {
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 5),
                         TextField(
-                          controller: appState.bodyController,
-                          maxLines: 10,
-                          decoration: const InputDecoration(
-                            hintText: '{ \n  "key": "value"\n}',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
+                            controller: appState.bodyController,
+                            maxLines: 10,
+                            decoration: const InputDecoration(
+                              hintText: '{ \n  "key": "value"\n}',
+                              border: OutlineInputBorder(),
+                            ),
+                            onTapOutside: (_) {
+                              appState.updateRequest(
+                                request: appState.selectedRequest!.copyWith(
+                                  body: Value(appState.bodyController.text),
+                                ),
+                              );
+                            },
+                            onEditingComplete: () {
+                              appState.updateRequest(
+                                request: appState.selectedRequest!.copyWith(
+                                  body: Value(appState.bodyController.text),
+                                ),
+                              );
+                            }),
                       ],
                     ),
                   ),

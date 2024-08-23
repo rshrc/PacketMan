@@ -26,12 +26,15 @@ class AppProvider extends ChangeNotifier {
 
   void selectRequest(Request request) {
     selectedRequest = request;
+    dropdownValue = request.requestType ?? 'GET';
+    urlController = TextEditingController(text: request.baseUrl);
+    bodyController = TextEditingController(text: request.body);
     notifyListeners();
   }
 
   String dropdownValue = 'GET';
-  final TextEditingController urlController = TextEditingController();
-  final TextEditingController bodyController = TextEditingController();
+  TextEditingController urlController = TextEditingController();
+  TextEditingController bodyController = TextEditingController();
   String? status;
 
   void setStatus(String? status) {
@@ -159,6 +162,18 @@ class AppProvider extends ChangeNotifier {
         environment: request.environment,
         headers: request.headers,
         body: request.body);
+
+    if (request.requestType != null) {
+      dropdownValue = request.requestType!;
+    }
+
+    if (request.baseUrl != null) {
+      urlController.text = request.baseUrl!;
+    }
+
+    if (request.body != null) {
+      bodyController.text = request.body!;
+    }
 
     // update the request object in requests
     final latestRequest = await _database.getRequest(selectedRequest!.id);

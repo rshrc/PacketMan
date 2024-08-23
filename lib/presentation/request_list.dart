@@ -21,24 +21,35 @@ class RequestsList extends StatelessWidget {
             onTap: () {
               context.read<AppProvider>().selectRequest(request);
             },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(request.requestType ?? "--",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color:
-                          getColorForRequestType(request.requestType ?? "--"),
-                    )),
-                const SizedBox(width: 10),
-                Text(request.name ?? "--",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                    )),
-              ],
+            child: Container(
+              decoration: BoxDecoration(
+                color: appState.selectedRequest?.id != request.id
+                    ? null
+                    : Colors.orangeAccent.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(request.requestType ?? "--",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: getColorForRequestType(
+                              request.requestType ?? "--"),
+                        )),
+                    const SizedBox(width: 10),
+                    Text(request.name ?? "--",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        )),
+                  ],
+                ),
+              ),
             ),
           );
         },

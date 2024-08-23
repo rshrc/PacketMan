@@ -25,8 +25,8 @@ class CollectionList extends StatelessWidget {
                   Text(collection.name ?? "--",
                       style: const TextStyle(
                         fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.purple,
                       )),
                   IconButton(
                     icon: const Icon(Icons.add),

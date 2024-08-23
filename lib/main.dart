@@ -27,6 +27,17 @@ class PacketMan extends StatelessWidget {
         title: 'PacketMan',
         theme: ThemeData(
           primarySwatch: Colors.orange,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.orange,
+              disabledForegroundColor: Colors.grey.withOpacity(0.38),
+              disabledBackgroundColor: Colors.grey.withOpacity(0.12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
         ),
         home: const MyHomePage(),
       ),
