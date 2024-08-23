@@ -6,7 +6,7 @@ import 'dart:convert';
 class JsonViewer extends StatelessWidget {
   final String jsonString;
 
-  JsonViewer({required this.jsonString});
+  const JsonViewer({super.key, required this.jsonString});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class JsonViewer extends StatelessWidget {
     var prettyString = _formatJson(jsonString);
 
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.orange),
         borderRadius: BorderRadius.circular(5),
@@ -23,8 +23,8 @@ class JsonViewer extends StatelessWidget {
         prettyString,
         language: 'json',
         theme: githubTheme, // You can change the theme here
-        padding: EdgeInsets.all(12),
-        textStyle: TextStyle(
+        padding: const EdgeInsets.all(12),
+        textStyle: const TextStyle(
           fontFamily: 'Courier', // A monospaced font for better readability
           fontSize: 16,
         ),
@@ -34,7 +34,7 @@ class JsonViewer extends StatelessWidget {
 
   String _formatJson(String jsonString) {
     var jsonObject = json.decode(jsonString);
-    var encoder = JsonEncoder.withIndent('  ');
+    var encoder = const JsonEncoder.withIndent('  ');
     return encoder.convert(jsonObject);
   }
 }
