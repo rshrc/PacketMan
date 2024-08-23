@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:packet_man/application/providers.dart';
 import 'package:packet_man/db/database.dart';
 import 'dart:convert';
 
 import 'package:packet_man/json_viewer.dart';
+import 'package:packet_man/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const PacketMan());
@@ -14,12 +17,15 @@ class PacketMan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'PacketMan',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
+    return MultiProvider(
+      providers: providers,
+      child: MaterialApp(
+        title: 'PacketMan',
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+        ),
+        home: const MyHomePage(),
       ),
-      home: const MyHomePage(),
     );
   }
 }
@@ -44,31 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  String getStatusMessage(int statusCode) {
-    switch (statusCode) {
-      case 200:
-        return 'Success';
-      case 201:
-        return 'Created';
-      case 204:
-        return 'No Content';
-      case 400:
-        return 'Bad Request';
-      case 401:
-        return 'Unauthorized';
-      case 403:
-        return 'Forbidden';
-      case 404:
-        return 'Not Found';
-      case 405:
-        return 'Method Not Allowed';
-      case 500:
-        return 'Internal Server Error';
-      default:
-        return 'Unknown';
-    }
-  }
-
   String responseText = '';
 
   void _makeRequest() async {
@@ -85,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
       switch (dropdownValue) {
         case 'GET':
           response = await http.get(Uri.parse(url));
-          setStatus(getStatusMessage(response.statusCode));
+          setStatus(statusMessageColor(response.statusCode));
           break;
         case 'POST':
           response = await http.post(
@@ -95,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             body: _bodyController.text,
           );
-          setStatus(getStatusMessage(response.statusCode));
+          setStatus(statusMessageColor(response.statusCode));
           break;
         case 'PUT':
           response = await http.put(
@@ -105,12 +86,12 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             body: jsonEncode(_bodyController.text),
           );
-          setStatus(getStatusMessage(response.statusCode));
+          setStatus(statusMessageColor(response.statusCode));
           break;
         // Add other cases as needed
         default:
           response = await http.get(Uri.parse(url));
-          setStatus(getStatusMessage(response.statusCode));
+          setStatus(statusMessageColor(response.statusCode));
           break;
       }
 

@@ -1,11 +1,13 @@
 import 'package:drift/drift.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:injectable/injectable.dart';
 import 'package:packet_man/db/tables.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'dart:io';
 part 'database.g.dart';
 
+@injectable
 @DriftDatabase(tables: [Projects, Collections, Requests])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
