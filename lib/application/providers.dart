@@ -5,5 +5,6 @@ import 'package:provider/provider.dart';
 final providers = [
   ChangeNotifierProvider<AppProvider>(
     create: (_) => getIt<AppProvider>(),
+    lazy: false,
   ),
 ];

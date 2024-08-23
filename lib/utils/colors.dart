@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 String statusMessageColor(int statusCode) {
   switch (statusCode) {
     case 200:
@@ -20,5 +22,22 @@ String statusMessageColor(int statusCode) {
       return 'Internal Server Error';
     default:
       return 'Unknown';
+  }
+}
+
+Color getColorForRequestType(String requestType) {
+  switch (requestType) {
+    case 'GET':
+      return Colors.orange;
+    case 'POST':
+      return Colors.green;
+    case 'PUT':
+      return Colors.blue;
+    case 'DELETE':
+      return Colors.red;
+    case 'PATCH':
+      return Colors.purple;
+    default:
+      return Colors.black;
   }
 }

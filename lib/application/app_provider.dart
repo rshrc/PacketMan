@@ -30,6 +30,25 @@ class AppProvider extends ChangeNotifier {
         this.requests[collection.id] = requests;
       }
     }
+
+    print("Line 34 : ${this.projects}");
+
+    notifyListeners();
+  }
+
+  Future<void> loadCollections(int projectId) async {
+    final collections = await _database.getCollectionsForProject(projectId);
+    this.collections[projectId] = collections;
+    for (final collection in collections) {
+      final requests = await _database.getRequestsForCollection(collection.id);
+      this.requests[collection.id] = requests;
+    }
+    notifyListeners();
+  }
+
+  Future<void> loadRequests(int collectionId) async {
+    final requests = await _database.getRequestsForCollection(collectionId);
+    this.requests[collectionId] = requests;
     notifyListeners();
   }
 
@@ -41,6 +60,11 @@ class AppProvider extends ChangeNotifier {
   Future<void> createCollection(
       int projectId, String name, String description) async {
     await _database.createCollection(projectId, name, description);
+    await loadProjects();
+  }
+
+  Future<void> createRequest(int collectionId, String name) async {
+    await _database.createRequest(collectionId, name);
     await loadProjects();
   }
 }
