@@ -96,6 +96,31 @@ class AppDatabase extends _$AppDatabase {
     return (select(requests)..where((tbl) => tbl.id.equals(requestId)))
         .getSingle();
   }
+
+  Future deleteRequest(int requestId) {
+    return (delete(requests)..where((tbl) => tbl.id.equals(requestId))).go();
+  }
+
+  Future deleteCollection(int collectionId) {
+    return (delete(collections)..where((tbl) => tbl.id.equals(collectionId)))
+        .go();
+  }
+
+  Future deleteProject(int projectId) {
+    return (delete(projects)..where((tbl) => tbl.id.equals(projectId))).go();
+  }
+
+  Future deleteAllProjects() {
+    return delete(projects).go();
+  }
+
+  Future deleteAllCollections() {
+    return delete(collections).go();
+  }
+
+  Future deleteAllRequests() {
+    return delete(requests).go();
+  }
 }
 
 LazyDatabase _openConnection() {

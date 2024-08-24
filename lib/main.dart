@@ -40,6 +40,7 @@ class PacketMan extends StatelessWidget {
           ),
         ),
         home: const MyHomePage(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
@@ -67,15 +68,55 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PacketMan',
-            style: TextStyle(
-              color: Colors.orange,
-            )),
+        title: const Text(
+          'PacketMan',
+          style: TextStyle(
+            color: Colors.orange,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                // show confirmation dialog
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text("Purge All Data"),
+                      content: const Text(
+                          "Are you sure you want to delete all data? This action cannot be undone."),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            // final database = AppDatabase();
+                            await context.read<AppProvider>().purgeAllData();
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Purge"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text("Purge"),
+            ),
+          ),
+        ],
       ),
       body: Row(
         children: [
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Column(
@@ -101,6 +142,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           const Expanded(flex: 5, child: RequestTestBody()),
+          const Expanded(
+              flex: 2,
+              child: SizedBox(
+                width: 300,
+              ))
         ],
       ),
     );

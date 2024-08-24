@@ -20,6 +20,7 @@ dependencies:
   provider:
   get_it:
   injectable:
+  font_awesome_flutter:
 
   path: any
 dev_dependencies:

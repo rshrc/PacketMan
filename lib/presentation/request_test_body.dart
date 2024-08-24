@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:packet_man/application/app_provider.dart';
 import 'package:packet_man/json_viewer.dart';
 import 'package:provider/provider.dart';
@@ -56,9 +57,18 @@ class RequestTestBody extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: appState.makeRequest,
-                  child: const Text('Test'),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                    onPressed: appState.makeRequest,
+                    child: const Icon(
+                      FontAwesomeIcons.solidPaperPlane,
+                      size: 18,
+                      color: Colors.green,
+                    ),
+                  ),
                 ),
               ],
             ),

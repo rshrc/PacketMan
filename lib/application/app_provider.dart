@@ -184,4 +184,18 @@ class AppProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> purgeAllData() async {
+    projects.clear();
+    collections.clear();
+    requests.clear();
+    selectedRequest = null;
+    // delete from database as well
+
+    await _database.deleteAllRequests();
+    await _database.deleteAllCollections();
+    await _database.deleteAllProjects();
+
+    notifyListeners();
+  }
 }
