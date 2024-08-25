@@ -19,7 +19,16 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2; // Increment this when making schema changes
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (migrator, from, to) async {
+          if (from == 1) {
+            await migrator.addColumn(requests, requests.queryParams);
+          }
+        },
+      );
 
 // Insert, update, delete, and query methods here
   Future<int> createProject(String name, String description) {
@@ -79,6 +88,7 @@ class AppDatabase extends _$AppDatabase {
     String? environment,
     String? headers,
     String? body,
+    String? queryParams,
   }) {
     return (update(requests)..where((tbl) => tbl.id.equals(requestId)))
         .write(RequestsCompanion(
@@ -89,6 +99,7 @@ class AppDatabase extends _$AppDatabase {
       environment: Value(environment),
       headers: Value(headers),
       body: Value(body),
+      queryParams: Value(queryParams),
     ));
   }
 

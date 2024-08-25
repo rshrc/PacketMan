@@ -532,6 +532,12 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
   late final GeneratedColumn<String> baseUrl = GeneratedColumn<String>(
       'base_url', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _queryParamsMeta =
+      const VerificationMeta('queryParams');
+  @override
+  late final GeneratedColumn<String> queryParams = GeneratedColumn<String>(
+      'query_params', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _endpointMeta =
       const VerificationMeta('endpoint');
   @override
@@ -573,6 +579,7 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
         collectionId,
         name,
         baseUrl,
+        queryParams,
         endpoint,
         requestType,
         environment,
@@ -610,6 +617,12 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
     if (data.containsKey('base_url')) {
       context.handle(_baseUrlMeta,
           baseUrl.isAcceptableOrUnknown(data['base_url']!, _baseUrlMeta));
+    }
+    if (data.containsKey('query_params')) {
+      context.handle(
+          _queryParamsMeta,
+          queryParams.isAcceptableOrUnknown(
+              data['query_params']!, _queryParamsMeta));
     }
     if (data.containsKey('endpoint')) {
       context.handle(_endpointMeta,
@@ -656,6 +669,8 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       baseUrl: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}base_url']),
+      queryParams: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}query_params']),
       endpoint: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}endpoint']),
       requestType: attachedDatabase.typeMapping
@@ -682,6 +697,7 @@ class Request extends DataClass implements Insertable<Request> {
   final int collectionId;
   final String name;
   final String? baseUrl;
+  final String? queryParams;
   final String? endpoint;
   final String? requestType;
   final String? environment;
@@ -693,6 +709,7 @@ class Request extends DataClass implements Insertable<Request> {
       required this.collectionId,
       required this.name,
       this.baseUrl,
+      this.queryParams,
       this.endpoint,
       this.requestType,
       this.environment,
@@ -707,6 +724,9 @@ class Request extends DataClass implements Insertable<Request> {
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || baseUrl != null) {
       map['base_url'] = Variable<String>(baseUrl);
+    }
+    if (!nullToAbsent || queryParams != null) {
+      map['query_params'] = Variable<String>(queryParams);
     }
     if (!nullToAbsent || endpoint != null) {
       map['endpoint'] = Variable<String>(endpoint);
@@ -737,6 +757,9 @@ class Request extends DataClass implements Insertable<Request> {
       baseUrl: baseUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(baseUrl),
+      queryParams: queryParams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(queryParams),
       endpoint: endpoint == null && nullToAbsent
           ? const Value.absent()
           : Value(endpoint),
@@ -764,6 +787,7 @@ class Request extends DataClass implements Insertable<Request> {
       collectionId: serializer.fromJson<int>(json['collectionId']),
       name: serializer.fromJson<String>(json['name']),
       baseUrl: serializer.fromJson<String?>(json['baseUrl']),
+      queryParams: serializer.fromJson<String?>(json['queryParams']),
       endpoint: serializer.fromJson<String?>(json['endpoint']),
       requestType: serializer.fromJson<String?>(json['requestType']),
       environment: serializer.fromJson<String?>(json['environment']),
@@ -780,6 +804,7 @@ class Request extends DataClass implements Insertable<Request> {
       'collectionId': serializer.toJson<int>(collectionId),
       'name': serializer.toJson<String>(name),
       'baseUrl': serializer.toJson<String?>(baseUrl),
+      'queryParams': serializer.toJson<String?>(queryParams),
       'endpoint': serializer.toJson<String?>(endpoint),
       'requestType': serializer.toJson<String?>(requestType),
       'environment': serializer.toJson<String?>(environment),
@@ -794,6 +819,7 @@ class Request extends DataClass implements Insertable<Request> {
           int? collectionId,
           String? name,
           Value<String?> baseUrl = const Value.absent(),
+          Value<String?> queryParams = const Value.absent(),
           Value<String?> endpoint = const Value.absent(),
           Value<String?> requestType = const Value.absent(),
           Value<String?> environment = const Value.absent(),
@@ -805,6 +831,7 @@ class Request extends DataClass implements Insertable<Request> {
         collectionId: collectionId ?? this.collectionId,
         name: name ?? this.name,
         baseUrl: baseUrl.present ? baseUrl.value : this.baseUrl,
+        queryParams: queryParams.present ? queryParams.value : this.queryParams,
         endpoint: endpoint.present ? endpoint.value : this.endpoint,
         requestType: requestType.present ? requestType.value : this.requestType,
         environment: environment.present ? environment.value : this.environment,
@@ -820,6 +847,8 @@ class Request extends DataClass implements Insertable<Request> {
           : this.collectionId,
       name: data.name.present ? data.name.value : this.name,
       baseUrl: data.baseUrl.present ? data.baseUrl.value : this.baseUrl,
+      queryParams:
+          data.queryParams.present ? data.queryParams.value : this.queryParams,
       endpoint: data.endpoint.present ? data.endpoint.value : this.endpoint,
       requestType:
           data.requestType.present ? data.requestType.value : this.requestType,
@@ -838,6 +867,7 @@ class Request extends DataClass implements Insertable<Request> {
           ..write('collectionId: $collectionId, ')
           ..write('name: $name, ')
           ..write('baseUrl: $baseUrl, ')
+          ..write('queryParams: $queryParams, ')
           ..write('endpoint: $endpoint, ')
           ..write('requestType: $requestType, ')
           ..write('environment: $environment, ')
@@ -849,8 +879,8 @@ class Request extends DataClass implements Insertable<Request> {
   }
 
   @override
-  int get hashCode => Object.hash(id, collectionId, name, baseUrl, endpoint,
-      requestType, environment, headers, body, response);
+  int get hashCode => Object.hash(id, collectionId, name, baseUrl, queryParams,
+      endpoint, requestType, environment, headers, body, response);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -859,6 +889,7 @@ class Request extends DataClass implements Insertable<Request> {
           other.collectionId == this.collectionId &&
           other.name == this.name &&
           other.baseUrl == this.baseUrl &&
+          other.queryParams == this.queryParams &&
           other.endpoint == this.endpoint &&
           other.requestType == this.requestType &&
           other.environment == this.environment &&
@@ -872,6 +903,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
   final Value<int> collectionId;
   final Value<String> name;
   final Value<String?> baseUrl;
+  final Value<String?> queryParams;
   final Value<String?> endpoint;
   final Value<String?> requestType;
   final Value<String?> environment;
@@ -883,6 +915,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     this.collectionId = const Value.absent(),
     this.name = const Value.absent(),
     this.baseUrl = const Value.absent(),
+    this.queryParams = const Value.absent(),
     this.endpoint = const Value.absent(),
     this.requestType = const Value.absent(),
     this.environment = const Value.absent(),
@@ -895,6 +928,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     required int collectionId,
     required String name,
     this.baseUrl = const Value.absent(),
+    this.queryParams = const Value.absent(),
     this.endpoint = const Value.absent(),
     this.requestType = const Value.absent(),
     this.environment = const Value.absent(),
@@ -908,6 +942,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     Expression<int>? collectionId,
     Expression<String>? name,
     Expression<String>? baseUrl,
+    Expression<String>? queryParams,
     Expression<String>? endpoint,
     Expression<String>? requestType,
     Expression<String>? environment,
@@ -920,6 +955,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
       if (collectionId != null) 'collection_id': collectionId,
       if (name != null) 'name': name,
       if (baseUrl != null) 'base_url': baseUrl,
+      if (queryParams != null) 'query_params': queryParams,
       if (endpoint != null) 'endpoint': endpoint,
       if (requestType != null) 'request_type': requestType,
       if (environment != null) 'environment': environment,
@@ -934,6 +970,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
       Value<int>? collectionId,
       Value<String>? name,
       Value<String?>? baseUrl,
+      Value<String?>? queryParams,
       Value<String?>? endpoint,
       Value<String?>? requestType,
       Value<String?>? environment,
@@ -945,6 +982,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
       collectionId: collectionId ?? this.collectionId,
       name: name ?? this.name,
       baseUrl: baseUrl ?? this.baseUrl,
+      queryParams: queryParams ?? this.queryParams,
       endpoint: endpoint ?? this.endpoint,
       requestType: requestType ?? this.requestType,
       environment: environment ?? this.environment,
@@ -968,6 +1006,9 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     }
     if (baseUrl.present) {
       map['base_url'] = Variable<String>(baseUrl.value);
+    }
+    if (queryParams.present) {
+      map['query_params'] = Variable<String>(queryParams.value);
     }
     if (endpoint.present) {
       map['endpoint'] = Variable<String>(endpoint.value);
@@ -997,6 +1038,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
           ..write('collectionId: $collectionId, ')
           ..write('name: $name, ')
           ..write('baseUrl: $baseUrl, ')
+          ..write('queryParams: $queryParams, ')
           ..write('endpoint: $endpoint, ')
           ..write('requestType: $requestType, ')
           ..write('environment: $environment, ')
@@ -1442,6 +1484,7 @@ typedef $$RequestsTableCreateCompanionBuilder = RequestsCompanion Function({
   required int collectionId,
   required String name,
   Value<String?> baseUrl,
+  Value<String?> queryParams,
   Value<String?> endpoint,
   Value<String?> requestType,
   Value<String?> environment,
@@ -1454,6 +1497,7 @@ typedef $$RequestsTableUpdateCompanionBuilder = RequestsCompanion Function({
   Value<int> collectionId,
   Value<String> name,
   Value<String?> baseUrl,
+  Value<String?> queryParams,
   Value<String?> endpoint,
   Value<String?> requestType,
   Value<String?> environment,
@@ -1496,6 +1540,11 @@ class $$RequestsTableFilterComposer
 
   ColumnFilters<String> get baseUrl => $state.composableBuilder(
       column: $state.table.baseUrl,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get queryParams => $state.composableBuilder(
+      column: $state.table.queryParams,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -1557,6 +1606,11 @@ class $$RequestsTableOrderingComposer
 
   ColumnOrderings<String> get baseUrl => $state.composableBuilder(
       column: $state.table.baseUrl,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get queryParams => $state.composableBuilder(
+      column: $state.table.queryParams,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -1627,6 +1681,7 @@ class $$RequestsTableTableManager extends RootTableManager<
             Value<int> collectionId = const Value.absent(),
             Value<String> name = const Value.absent(),
             Value<String?> baseUrl = const Value.absent(),
+            Value<String?> queryParams = const Value.absent(),
             Value<String?> endpoint = const Value.absent(),
             Value<String?> requestType = const Value.absent(),
             Value<String?> environment = const Value.absent(),
@@ -1639,6 +1694,7 @@ class $$RequestsTableTableManager extends RootTableManager<
             collectionId: collectionId,
             name: name,
             baseUrl: baseUrl,
+            queryParams: queryParams,
             endpoint: endpoint,
             requestType: requestType,
             environment: environment,
@@ -1651,6 +1707,7 @@ class $$RequestsTableTableManager extends RootTableManager<
             required int collectionId,
             required String name,
             Value<String?> baseUrl = const Value.absent(),
+            Value<String?> queryParams = const Value.absent(),
             Value<String?> endpoint = const Value.absent(),
             Value<String?> requestType = const Value.absent(),
             Value<String?> environment = const Value.absent(),
@@ -1663,6 +1720,7 @@ class $$RequestsTableTableManager extends RootTableManager<
             collectionId: collectionId,
             name: name,
             baseUrl: baseUrl,
+            queryParams: queryParams,
             endpoint: endpoint,
             requestType: requestType,
             environment: environment,

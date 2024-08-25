@@ -21,6 +21,7 @@ class Requests extends Table {
       .customConstraint('REFERENCES collections(id) ON DELETE CASCADE')();
   TextColumn get name => text().withLength(min: 1, max: 255)();
   TextColumn get baseUrl => text().nullable()();
+  TextColumn get queryParams => text().nullable()(); // Store as JSON string
   TextColumn get endpoint => text().nullable()();
   TextColumn get requestType => text().nullable()(); // GET, POST, etc.
   TextColumn get environment => text().nullable()();

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:drift/drift.dart' hide Column;
+import 'package:drift/drift.dart' hide Column, Table;
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -97,17 +97,145 @@ class APITestSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            const Row(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RequestBodySection(),
-                SizedBox(width: 16),
-                ResponseBodySection(),
+                const Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RequestBodySection(),
+                    SizedBox(width: 16),
+                    ResponseBodySection(),
+                  ],
+                ),
+                // Segmented Button with options Params, Authorization, Headers
+                const SizedBox(height: 20),
+                SegmentedButton<EditableOptions>(
+                  style: SegmentedButton.styleFrom(
+                    backgroundColor: Colors.grey[100],
+                    foregroundColor: Colors.black,
+                    selectedForegroundColor: Colors.white,
+                    selectedBackgroundColor: Colors.orangeAccent,
+                    side: const BorderSide(color: Colors.transparent),
+                  ),
+                  segments: const <ButtonSegment<EditableOptions>>[
+                    ButtonSegment<EditableOptions>(
+                        value: EditableOptions.params,
+                        label: Text('Query Params'),
+                        icon: Icon(
+                          FontAwesomeIcons.question,
+                        )),
+                    ButtonSegment<EditableOptions>(
+                        value: EditableOptions.authorization,
+                        label: Text('Authorization'),
+                        icon: Icon(
+                          FontAwesomeIcons.shieldDog,
+                        )),
+                    ButtonSegment<EditableOptions>(
+                      value: EditableOptions.headers,
+                      label: Text('Headers'),
+                      icon: Icon(Icons.calendar_view_month),
+                    ),
+                  ],
+                  selected: <EditableOptions>{appState.selectedEditableOption},
+                  onSelectionChanged: (Set<EditableOptions> newSelection) {
+                    appState.setSelectedEditableOption(newSelection.first);
+                  },
+                ),
+                if (appState.selectedEditableOption == EditableOptions.params)
+                  const QueryParameterSection()
+                else if (appState.selectedEditableOption ==
+                    EditableOptions.authorization)
+                  const AuthorizationSection()
+                else if (appState.selectedEditableOption ==
+                    EditableOptions.headers)
+                  const HeadersSection()
               ],
             ),
           ],
         ),
       );
     });
+  }
+}
+
+class QueryParameterSection extends StatelessWidget {
+  const QueryParameterSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: 400,
+        height: 300,
+        color: Colors.red.withOpacity(0.1),
+        padding: const EdgeInsets.all(8.0),
+        child: Consumer<AppProvider>(builder: (context, appState, _) {
+          return Table(
+            columnWidths: const {
+              0: FlexColumnWidth(0.5),
+              1: FlexColumnWidth(1.0),
+            },
+            border: TableBorder.all(color: Colors.grey),
+            children: List.generate(4, (index) {
+              final keyController = appState.keyControllers['key_$index'] ??
+                  TextEditingController();
+              final valueController =
+                  appState.valueControllers['value_$index'] ??
+                      TextEditingController();
+
+              return TableRow(children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                      controller: keyController,
+                      decoration: const InputDecoration(labelText: 'Key'),
+                      onChanged: (value) {
+                        appState.updateQueryParamKey(index, value);
+                      },
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: valueController,
+                    decoration: const InputDecoration(labelText: 'Value'),
+                    onChanged: (value) {
+                      appState.updateQueryParamValue(index, value);
+                    },
+                  ),
+                ),
+              ]);
+            }),
+          );
+        }));
+  }
+}
+
+class AuthorizationSection extends StatelessWidget {
+  const AuthorizationSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 400,
+      height: 300,
+      color: Colors.blue,
+    );
+  }
+}
+
+class HeadersSection extends StatelessWidget {
+  const HeadersSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 400,
+      height: 300,
+      color: Colors.green,
+    );
   }
 }

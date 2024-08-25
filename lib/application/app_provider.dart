@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -11,6 +12,13 @@ import 'package:injectable/injectable.dart';
 // Project imports:
 import 'package:packet_man/db/database.dart';
 import 'package:packet_man/utils/colors.dart';
+import 'package:packet_man/utils/logger.dart';
+
+enum EditableOptions {
+  params,
+  authorization,
+  headers,
+}
 
 @injectable
 class AppProvider extends ChangeNotifier {
@@ -26,22 +34,84 @@ class AppProvider extends ChangeNotifier {
 
   Request? selectedRequest;
 
+  EditableOptions selectedEditableOption = EditableOptions.params;
+
+  Map<String, String> queryParams = {};
+
+  void setSelectedEditableOption(EditableOptions option) {
+    selectedEditableOption = option;
+    notifyListeners();
+  }
+
   initApp() async {
     await loadProjects();
   }
 
   void selectRequest(Request request) {
     selectedRequest = request;
+
+    print("Line 52 : ${request}");
+
     dropdownValue = request.requestType ?? 'GET';
     urlController = TextEditingController(text: request.baseUrl);
     bodyController = TextEditingController(text: request.body);
+
+    queryParams =
+        Map<String, String>.from(jsonDecode(request.queryParams ?? '{}'));
+    _initializeControllers();
     notifyListeners();
+  }
+
+  void _initializeControllers() {
+    keyControllers.clear();
+    valueControllers.clear();
+
+    queryParams.forEach((key, value) {
+      keyControllers[key] = TextEditingController(text: key);
+      valueControllers[key] = TextEditingController(text: value);
+    });
+
+    logger.w("Line 74 : ${queryParams.length}");
+    // log the keycontrollers and value controllers
+    logger.w("Key Controllers : $keyControllers");
+    logger.w("Value Controllers : $valueControllers");
+
+    for (int i = queryParams.length; i < 4; i++) {
+      keyControllers['key_$i'] = TextEditingController();
+      valueControllers['value_$i'] = TextEditingController();
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> saveQueryParams() async {
+    keyControllers.forEach((key, controller) {
+      final valueController = valueControllers[key];
+      if (controller.text.isNotEmpty &&
+          valueController?.text.isNotEmpty == true) {
+        queryParams[controller.text] = valueController!.text;
+      }
+    });
+
+    logger.w("Query Params : $queryParams");
+
+    if (selectedRequest != null) {
+      print("Hello!");
+      await updateRequest(
+          request: selectedRequest!.copyWith(
+        queryParams: Value(jsonEncode(queryParams)),
+      ));
+      notifyListeners();
+    }
   }
 
   String dropdownValue = 'GET';
   TextEditingController urlController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
   String? status;
+
+  Map<String, TextEditingController> keyControllers = {};
+  Map<String, TextEditingController> valueControllers = {};
 
   void setStatus(String? status) {
     this.status = status;
@@ -162,13 +232,16 @@ class AppProvider extends ChangeNotifier {
     required Request request,
   }) async {
     final update = await _database.updateRequest(
-        selectedRequest!.id, selectedRequest!.name,
-        baseUrl: request.baseUrl,
-        endpoint: request.endpoint,
-        requestType: request.requestType,
-        environment: request.environment,
-        headers: request.headers,
-        body: request.body);
+      selectedRequest!.id,
+      selectedRequest!.name,
+      baseUrl: request.baseUrl,
+      endpoint: request.endpoint,
+      requestType: request.requestType,
+      environment: request.environment,
+      headers: request.headers,
+      body: request.body,
+      queryParams: request.queryParams,
+    );
 
     if (request.requestType != null) {
       dropdownValue = request.requestType!;
@@ -190,6 +263,32 @@ class AppProvider extends ChangeNotifier {
             .toList();
 
     notifyListeners();
+  }
+
+  void updateQueryParamKey(int index, String key) {
+    String? currentValue = queryParams.remove(_getKeyForIndex(index));
+    if (key.isNotEmpty) {
+      queryParams[key] = currentValue ?? '';
+    }
+
+    notifyListeners();
+
+    saveQueryParams();
+  }
+
+  void updateQueryParamValue(int index, String value) {
+    String? currentKey = _getKeyForIndex(index);
+    if (currentKey != null) {
+      queryParams[currentKey] = value;
+    }
+    notifyListeners();
+
+    saveQueryParams();
+  }
+
+  String? _getKeyForIndex(int index) {
+    if (index >= queryParams.length) return null;
+    return queryParams.keys.elementAt(index);
   }
 
   Future<void> purgeAllData() async {
