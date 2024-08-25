@@ -142,6 +142,7 @@ class APITestSection extends StatelessWidget {
                     appState.setSelectedEditableOption(newSelection.first);
                   },
                 ),
+                const SizedBox(height: 12),
                 if (appState.selectedEditableOption == EditableOptions.params)
                   const QueryParameterSection()
                 else if (appState.selectedEditableOption ==
@@ -165,17 +166,22 @@ class QueryParameterSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 400,
+        width: MediaQuery.of(context).size.width * 0.5,
         height: 300,
-        color: Colors.red.withOpacity(0.1),
         padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Colors.red.withOpacity(0.1),
+          border: Border.all(color: Colors.transparent),
+          borderRadius: BorderRadius.circular(8),
+        ),
         child: Consumer<AppProvider>(builder: (context, appState, _) {
           return Table(
             columnWidths: const {
               0: FlexColumnWidth(0.5),
               1: FlexColumnWidth(1.0),
             },
-            border: TableBorder.all(color: Colors.grey),
+            border: TableBorder.all(
+                color: Colors.grey, borderRadius: BorderRadius.circular(8)),
             children: List.generate(4, (index) {
               final keyController = appState.keyControllers['key_$index'] ??
                   TextEditingController();
@@ -188,7 +194,12 @@ class QueryParameterSection extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                       controller: keyController,
-                      decoration: const InputDecoration(labelText: 'Key'),
+                      decoration: const InputDecoration(
+                        labelText: 'Key',
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                      ),
                       onChanged: (value) {
                         appState.updateQueryParamKey(index, value);
                       },
@@ -201,7 +212,12 @@ class QueryParameterSection extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     controller: valueController,
-                    decoration: const InputDecoration(labelText: 'Value'),
+                    decoration: const InputDecoration(
+                      labelText: 'Value',
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
                     onChanged: (value) {
                       appState.updateQueryParamValue(index, value);
                     },
