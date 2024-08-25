@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -126,7 +128,8 @@ class RequestTestBody extends StatelessWidget {
                       ),
                       child: JsonViewer(
                         jsonString: appState.responseText.isEmpty
-                            ? '{"message": "Response will be shown here"}'
+                            ? jsonEncode(
+                                '{"message": "Response will be shown here"}')
                             : appState.responseText,
                       ),
                     ),

@@ -47,7 +47,8 @@ class AppProvider extends ChangeNotifier {
   void makeRequest() async {
     String url = urlController.text;
     if (url.isEmpty) {
-      responseText = 'Please enter a URL';
+      // todo: need to make this better, this sucks
+      responseText = jsonEncode('{\'error\': \'Please enter a URL\'}');
       notifyListeners();
       return;
     }
