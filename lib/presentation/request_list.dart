@@ -41,12 +41,14 @@ class RequestsList extends StatelessWidget {
                               request.requestType ?? "--"),
                         )),
                     const SizedBox(width: 10),
-                    Text(request.name ?? "--",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                        )),
+                    Flexible(
+                      child: Text(request.name ?? "--",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                          )),
+                    ),
                   ],
                 ),
               ),

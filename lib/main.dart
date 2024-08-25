@@ -119,25 +119,27 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: 2,
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        // create project, but first open dialog box
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const CreateProjectDialog();
-                            });
-                      },
-                      child: const Text("Create Project")),
-                  const Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                    child: ProjectsList(),
-                  )
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          // create project, but first open dialog box
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const CreateProjectDialog();
+                              });
+                        },
+                        child: const Text("Create Project")),
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                      child: ProjectsList(),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
