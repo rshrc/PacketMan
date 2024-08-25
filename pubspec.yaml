@@ -19,6 +19,7 @@ dependencies:
   path_provider: any
   provider: any
   logger:
+  lottie:
 dev_dependencies: 
   build_runner: any
   drift_dev: any
@@ -28,6 +29,9 @@ dev_dependencies:
   import_sorter: any
   injectable_generator: any
   pubspec_dependency_sorter: any
-
+  flutter_gen: 5.6.0
+  flutter_gen_runner: 5.6.0
 flutter: 
   uses-material-design: true
+  assets:
+    - assets/

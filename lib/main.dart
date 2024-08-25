@@ -1,5 +1,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lottie/lottie.dart';
+import 'package:packet_man/gen/assets.gen.dart';
 
 // Package imports:
 import 'package:provider/provider.dart';
@@ -30,7 +33,7 @@ class PacketMan extends StatelessWidget {
       child: MaterialApp(
         title: 'PacketMan',
         theme: ThemeData(
-          primarySwatch: Colors.orange,
+          primarySwatch: Colors.pink,
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
@@ -72,11 +75,22 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'PacketMan',
-          style: TextStyle(
-            color: Colors.orange,
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Packetman',
+              style: TextStyle(
+                color: Colors.purple,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Lottie.asset(
+              Assets.packeManAnimated,
+              width: 50,
+              height: 50,
+            ),
+          ],
         ),
         actions: [
           Padding(
