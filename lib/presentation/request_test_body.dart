@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:drift/drift.dart' hide Column;
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -33,8 +34,9 @@ class APITestSection extends StatelessWidget {
                   value: appState.dropdownValue,
                   onChanged: (String? newValue) {
                     appState.updateRequest(
-                        request: appState.selectedRequest!
-                            .copyWith(requestType: Value(newValue)));
+                      request: appState.selectedRequest!
+                          .copyWith(requestType: Value(newValue)),
+                    );
                   },
                   items: <String>['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
                       .map<DropdownMenuItem<String>>((String value) {
@@ -48,10 +50,26 @@ class APITestSection extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     controller: appState.urlController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Enter URL',
-                    ),
+                    decoration: InputDecoration(
+                        hintText: 'https://api.example.com',
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        suffixIcon: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () async {
+                              // copy appState.urlController to clipboard
+                              await Clipboard.setData(
+                                ClipboardData(
+                                    text: appState.urlController.text),
+                              );
+                            },
+                            child: const Icon(
+                              Icons.copy,
+                            ),
+                          ),
+                        )),
                     onEditingComplete: () {
                       appState.updateRequest(
                         request: appState.selectedRequest!.copyWith(
@@ -65,8 +83,9 @@ class APITestSection extends StatelessWidget {
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
                     onPressed: appState.makeRequest,
                     child: const Icon(
                       FontAwesomeIcons.solidPaperPlane,
