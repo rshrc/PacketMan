@@ -11,6 +11,8 @@ behind paywalls or into the cloud. That’s great for teams with deep pockets, b
 needs something simple and effective. I need a tool for personal projects or hobby projects where I can just test simple API's with
 a nice GUI
 
+This has only local storage option now, maybe in sometime we can have a instant firebase sync that can help teams store and share  data through.  Team wise it might be cheaper.
+
 ## Screenshot
 
 ![Imgur](https://i.imgur.com/JZ2MUiX.png)
