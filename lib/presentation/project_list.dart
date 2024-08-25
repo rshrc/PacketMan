@@ -1,8 +1,13 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:packet_man/application/app_provider.dart';
 import 'package:packet_man/presentation/collection_list.dart';
 import 'package:packet_man/presentation/forms/create_collection.dart';
-import 'package:provider/provider.dart';
 
 class ProjectsList extends StatelessWidget {
   const ProjectsList({super.key});

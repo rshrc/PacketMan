@@ -1,14 +1,17 @@
-import 'dart:convert';
-
-import 'package:drift/drift.dart' hide Column;
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:drift/drift.dart' hide Column;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:packet_man/application/app_provider.dart';
-import 'package:packet_man/json_viewer.dart';
 import 'package:provider/provider.dart';
 
-class RequestTestBody extends StatelessWidget {
-  const RequestTestBody({super.key});
+// Project imports:
+import 'package:packet_man/application/app_provider.dart';
+import 'package:packet_man/presentation/sections/sections.dart';
+
+class APITestSection extends StatelessWidget {
+  const APITestSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,66 +78,12 @@ class RequestTestBody extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            Row(
+            const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.orange),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    constraints:
-                        const BoxConstraints(minWidth: 400, minHeight: 300),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Request Body:',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 5),
-                        TextField(
-                            controller: appState.bodyController,
-                            maxLines: 10,
-                            decoration: const InputDecoration(
-                              hintText: '{ \n  "key": "value"\n}',
-                              border: OutlineInputBorder(),
-                            ),
-                            onTapOutside: (_) {
-                              appState.updateRequest(
-                                request: appState.selectedRequest!.copyWith(
-                                  body: Value(appState.bodyController.text),
-                                ),
-                              );
-                            },
-                            onEditingComplete: () {
-                              appState.updateRequest(
-                                request: appState.selectedRequest!.copyWith(
-                                  body: Value(appState.bodyController.text),
-                                ),
-                              );
-                            }),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Container(
-                      constraints: const BoxConstraints(
-                        minWidth: 400,
-                        minHeight: 300,
-                      ),
-                      child: JsonViewer(
-                        jsonString: appState.responseText.isEmpty
-                            ? jsonEncode(
-                                '{"message": "Response will be shown here"}')
-                            : appState.responseText,
-                      ),
-                    ),
-                  ),
-                ),
+                RequestBodySection(),
+                SizedBox(width: 16),
+                ResponseBodySection(),
               ],
             ),
           ],

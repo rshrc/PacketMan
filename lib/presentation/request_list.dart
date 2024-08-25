@@ -1,7 +1,12 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:packet_man/application/app_provider.dart';
 import 'package:packet_man/utils/colors.dart';
-import 'package:provider/provider.dart';
 
 class RequestsList extends StatelessWidget {
   final int collectionId;

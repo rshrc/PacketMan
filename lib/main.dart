@@ -1,12 +1,16 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:packet_man/application/app_provider.dart';
 import 'package:packet_man/application/providers.dart';
 import 'package:packet_man/di/injection.dart';
-
 import 'package:packet_man/presentation/forms/create_projects.dart';
 import 'package:packet_man/presentation/project_list.dart';
 import 'package:packet_man/presentation/request_test_body.dart';
-import 'package:provider/provider.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -117,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: SingleChildScrollView(
@@ -145,12 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          const Expanded(flex: 5, child: RequestTestBody()),
-          const Expanded(
-              flex: 2,
-              child: SizedBox(
-                width: 300,
-              ))
+          const Expanded(flex: 5, child: APITestSection()),
         ],
       ),
     );

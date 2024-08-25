@@ -1,6 +1,11 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:packet_man/application/app_provider.dart';
+
+// Package imports:
 import 'package:provider/provider.dart';
+
+// Project imports:
+import 'package:packet_man/application/app_provider.dart';
 
 class CreateCollectionDialog extends StatefulWidget {
   final int projectID;

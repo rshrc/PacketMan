@@ -1,7 +1,12 @@
+// Dart imports:
+import 'dart:convert';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/github.dart';
-import 'dart:convert';
 
 class JsonViewer extends StatelessWidget {
   final String jsonString;

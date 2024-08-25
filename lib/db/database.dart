@@ -1,10 +1,16 @@
+// Dart imports:
+import 'dart:io';
+
+// Package imports:
 import 'package:drift/drift.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:injectable/injectable.dart';
-import 'package:packet_man/db/tables.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
+// Project imports:
+import 'package:packet_man/db/tables.dart';
+
 part 'database.g.dart';
 
 @injectable
