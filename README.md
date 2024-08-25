@@ -15,4 +15,4 @@ This has only local storage option now, maybe in sometime we can have a instant 
 
 ## Screenshot
 
-![Imgur](https://i.imgur.com/JZ2MUiX.png)
+![Imgur](https://imgur.com/a/PMNpzKe)
